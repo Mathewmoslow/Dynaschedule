@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mathew Moslow | Author</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet" />
+  
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- GSAP + ScrollTrigger -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
+  
+  <style>
+    /* Base styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    :root {
+      --crimson: #a00032;
+      --beige: #f8f2e7;
+      --text-dark: #1c1c1c;
+    }
+    
+    body {
+      font-family: 'Crimson Text', serif;
+      background-color: var(--beige);
+      color: var(--text-dark);
+      overflow-x: hidden;
+      width: 100%;
+      line-height: 1.6;
+    }
+    
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+    
+    /* Typography */
+    h1, h2, h3 {
+      font-family: 'Playfair Display', serif;
+      margin-bottom: 1rem;
+    }
+    
+    h1 {
+      font-size: clamp(2rem, 3vw, 3.5rem);
+      color: var(--crimson);
+    }
+    
+    h2 {
+      font-size: clamp(1.8rem, 2.5vw, 3rem);
+      margin-bottom: 1.5rem;
+    }
+    
+    h3 {
+      font-size: clamp(1.4rem, 2vw, 2.5rem);
+      margin-bottom: 1rem;
+    }
+    
+    /* Full-width section utility */
+    .full-width {
+      width: 100vw;
+      position: relative;
+      left: 50%;
+      right: 50%;
+      margin-left: -50vw;
+      margin-right: -50vw;
+    }
+    
+    /* Hero Section */
+    .hero {
+      min-height: 100vh;
+      background: url('https://studyhubmatt.neocities.org/Dev/author/images/header.jpg') center/cover no-repeat;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .hero h1 {
+      font-size: clamp(3rem, 6vw, 8rem);
+      color: #fff;
+      text-shadow: 1px 1px 6px rgba(0,0,0,0.6);
+      text-align: center;
+    }
+    
+    /* Novel Hero Section */
+    .novel-hero {
+      background: linear-gradient(135deg, #f8f2e7 0%, #f0e6d6 100%);
+      padding: 80px 20px;
+      min-height: 90vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+    }
+    
+    .hero-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    
+    .hero-content {
+      display: flex;
+      align-items: center;
+      gap: 80px;
+    }
+    
+    .hero-book {
+      flex: 0 0 450px;
+    }
+    
+    .hero-book img {
+      width: 100%;
+      max-width: 450px;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+      border-radius: 8px;
+    }
+    
+    .hero-text {
+      flex: 1;
+    }
+    
+    .hero-title {
+      font-size: clamp(3rem, 4vw, 5rem);
+      margin-bottom: 1rem;
+      color: var(--text-dark);
+    }
+    
+    .hero-tagline {
+      font-size: clamp(1.2rem, 1.5vw, 1.8rem);
+      color: var(--crimson);
+      margin-bottom: 2rem;
+      font-style: italic;
+    }
+    
+    .hero-description {
+      font-size: clamp(1.1rem, 1.3vw, 1.4rem);
+      line-height: 1.8;
+      margin-bottom: 3rem;
+      color: #333;
+    }
+    
+    .hero-buttons {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+    
+    .buy-button-hero {
+      background: var(--crimson);
+      color: white;
+      padding: 15px 40px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      text-decoration: none;
+      border-radius: 50px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+    }
+    
+    .buy-button-hero:hover {
+      background: #d00040;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+    
+    .preview-button {
+      color: var(--crimson);
+      padding: 15px 30px;
+      font-size: 1.1rem;
+      text-decoration: none;
+      border: 2px solid var(--crimson);
+      border-radius: 50px;
+      transition: all 0.3s ease;
+    }
+    
+    .preview-button:hover {
+      background: var(--crimson);
+      color: white;
+    }
+    
+    /* Floating Media Player */
+    .floating-player {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 350px;
+      background: #1a1a1a;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      z-index: 1000;
+      transition: all 0.3s ease;
+      opacity: 0;
+      transform: translateY(100px);
+      pointer-events: none;
+    }
+    
+    .floating-player.visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: all;
+    }
+    
+    .floating-player.minimized {
+      height: 60px;
+    }
+    
+    .player-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background: var(--crimson);
+      border-radius: 12px 12px 0 0;
+      color: white;
+    }
+    
+    .player-header h4 {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin: 0;
+    }
+    
+    .minimize-btn {
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    
+    .player-body {
+      padding: 16px;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+    
+    .player-body.collapsed {
+      max-height: 0;
+      padding: 0;
+    }
+    
+    .compact-controls {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+    
+    .mini-cover {
+      width: 60px;
+      height: 60px;
+      flex-shrink: 0;
+    }
+    
+    .mini-cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+    
+    .player-info {
+      flex: 1;
+    }
+    
+    .now-playing-compact {
+      color: white;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .control-buttons {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .float-control-btn, .float-play-btn {
+      background: var(--crimson);
+      border: none;
+      color: white;
+      cursor: pointer;
+      border-radius: 50%;
+      transition: all 0.2s ease;
+    }
+    
+    .float-control-btn {
+      width: 32px;
+      height: 32px;
+      font-size: 0.8rem;
+    }
+    
+    .float-play-btn {
+      width: 36px;
+      height: 36px;
+      font-size: 0.9rem;
+    }
+    
+    .float-control-btn:hover, .float-play-btn:hover {
+      background: #d00040;
+      transform: scale(1.05);
+    }
+    
+    .progress-container-float {
+      margin-bottom: 15px;
+    }
+    
+    .progress-track {
+      width: 100%;
+      height: 5px;
+      background-color: #333;
+      border-radius: 2px;
+      appearance: none;
+      -webkit-appearance: none;
+      border: none;
+    }
+    
+    .progress-track::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 12px;
+      height: 12px;
+      background: var(--crimson);
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    
+    .progress-track::-moz-range-thumb {
+      width: 12px;
+      height: 12px;
+      background: var(--crimson);
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    
+    .time-display-float {
+      text-align: right;
+      font-size: 0.7rem;
+      color: #999;
+      margin-top: 5px;
+    }
+    
+    .track-list-float {
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    
+    .track-list-float::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    .track-list-float::-webkit-scrollbar-track {
+      background: #333;
+    }
+    
+    .track-list-float::-webkit-scrollbar-thumb {
+      background: var(--crimson);
+      border-radius: 3px;
+    }
+    
+    .track-float {
+      display: flex;
+      align-items: center;
+      padding: 8px 0;
+      cursor: pointer;
+      color: #ccc;
+      transition: all 0.2s ease;
+      border-bottom: 1px solid #333;
+    }
+    
+    .track-float:hover {
+      color: white;
+      background: #333;
+    }
+    
+    .track-float.active {
+      color: var(--crimson);
+    }
+    
+    .track-number {
+      flex: 0 0 30px;
+      text-align: center;
+      font-size: 0.8rem;
+    }
+    
+    /* Second Novel Section */
+    .second-novel {
+      padding: 80px 20px;
+      background-color: var(--beige);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .novel-container {
+      max-width: 1200px;
+      width: 100%;
+    }
+    
+    .novel-layout {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 60px;
+    }
+    
+    .novel-cover-side {
+      flex: 0 0 350px;
+    }
+    
+    .novel-cover {
+      width: 100%;
+      max-width: 350px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .novel-text-side {
+      flex: 1;
+    }
+    
+    /* About Section */
+    .about {
+      padding: 80px 20px;
+      background-color: var(--beige);
+    }
+    
+    .about-container {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+    }
+    
+    .about-layout {
+      display: flex;
+      flex-direction: row;
+      gap: 60px;
+      align-items: flex-start;
+    }
+    
+    .about-text {
+      flex: 1;
+    }
+    
+    .about-text p {
+      margin-bottom: 20px;
+    }
+    
+    .about-image {
+      flex: 0 0 300px;
+    }
+    
+    .headshot {
+      width: 100%;
+      max-width: 300px;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    /* Footer */
+    footer {
+      padding: 40px 20px;
+      background-color: var(--crimson);
+      color: white;
+      text-align: center;
+    }
+    
+    /* Media Queries */
+    @media (max-width: 992px) {
+      .hero-content {
+        flex-direction: column;
+        gap: 40px;
+        text-align: center;
+      }
+      
+      .hero-book {
+        flex: 0 0 auto;
+      }
+      
+      .hero-book img {
+        max-width: 350px;
+      }
+      
+      .hero-buttons {
+        justify-content: center;
+      }
+      
+      .novel-layout, .about-layout {
+        flex-direction: column;
+        gap: 30px;
+      }
+      
+      .novel-cover-side, .about-image {
+        flex: 0 0 auto;
+      }
+      
+      .novel-text-side {
+        text-align: center;
+      }
+    }
+    
+    @media (max-width: 767px) {
+      .floating-player {
+        width: 300px;
+        bottom: 10px;
+        right: 10px;
+      }
+      
+      .hero-book img {
+        max-width: 280px;
+      }
+      
+      .hero-title {
+        font-size: 2.5rem;
+      }
+      
+      .hero-tagline {
+        font-size: 1.2rem;
+      }
+      
+      .hero-description {
+        font-size: 1rem;
+      }
+      
+      .hero-buttons {
+        flex-direction: column;
+        width: 100%;
+      }
+      
+      .buy-button-hero, .preview-button {
+        width: 100%;
+        text-align: center;
+      }
+      
+      .novel-cover, .headshot {
+        max-width: 250px;
+      }
+      
+      .novel-text-side, .about-text {
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Hero Section with Zoom Effect -->
+  <section class="hero full-width" id="hero-section">
+    <h1 id="hero-title">Mathew Moslow</h1>
+  </section>
+
+  <!-- Novel Hero Section - Full Width -->
+  <section class="novel-hero full-width">
+    <div class="hero-container">
+      <div class="hero-content">
+        <div class="hero-book">
+          <img src="https://studyhubmatt.neocities.org/mathewmoslow/IMG_1357.jpeg" alt="A Novel Divorce Cover">
+        </div>
+        <div class="hero-text">
+          <h1 class="hero-title">A Novel Divorce</h1>
+          <p class="hero-tagline">A raw, unflinching memoir of love, betrayal, and self-discovery</p>
+          <p class="hero-description">
+            Beneath the heartbreak and hard-earned truths is a world of swirling rumors—whispers of drug-fueled binges, orgiastic escapades, and a relentless parade of men who blurred the lines between distraction and destruction. No one has ever heard the one about being the pass-around pretty boy in Jamaican prison. Some swear he flirted with darker impulses—maybe even murder, maybe twice? The real story? Buried somewhere in Moslow's no-holds-barred confessions, where secrets and half-truths collide in a storm of scandal and self-reckoning.
+          </p>
+          <div class="hero-buttons">
+            <a href="#" class="buy-button-hero">Buy Now</a>
+            <a href="#" class="preview-button">Read Preview</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Floating Media Player -->
+  <div class="floating-player" id="floating-player">
+    <div class="player-header">
+      <h4>Soundtrack to the Book</h4>
+      <button class="minimize-btn" id="minimize-btn">
+        <i class="fas fa-minus"></i>
+      </button>
+    </div>
+    
+    <div class="player-body" id="player-body">
+      <div class="compact-controls">
+        <div class="mini-cover" id="mini-cover">
+          <img src="https://studyhubmatt.neocities.org/mathewmoslow/media/flgb2.jpeg" alt="Current Track">
+        </div>
+        <div class="player-info">
+          <div class="now-playing-compact" id="now-playing">Select a track</div>
+          <div class="control-buttons">
+            <button class="float-control-btn" id="prev-btn"><i class="fas fa-backward"></i></button>
+            <button class="float-play-btn" id="play-btn"><i class="fas fa-play"></i></button>
+            <button class="float-control-btn" id="next-btn"><i class="fas fa-forward"></i></button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="progress-container-float">
+        <input type="range" class="progress-track" id="progress-track" min="0" max="100" value="0">
+        <div class="time-display-float" id="time-display">00:00 / 00:00</div>
+      </div>
+      
+      <div class="track-list-float">
+        <div class="track-float" data-file="feelslikegoodbyelandr.mp3" data-index="0" data-cover="https://studyhubmatt.neocities.org/mathewmoslow/media/flgb2.jpeg">
+          <span class="track-number">1</span>
+          <span class="track-title">Feels Like Goodbye</span>
+        </div>
+        
+        <div class="track-float" data-file="feelslikegoodbyeslow.mp3" data-index="1" data-cover="https://studyhubmatt.neocities.org/mathewmoslow/media/flgb2.jpeg">
+          <span class="track-number">2</span>
+          <span class="track-title">Feels Like Goodbye (Slow)</span>
+        </div>
+        
+        <div class="track-float" data-file="useme.mp3" data-index="2" data-cover="https://studyhubmatt.neocities.org/mathewmoslow/media/lmcover.png">
+          <span class="track-number">3</span>
+          <span class="track-title">Lovely Mess</span>
+        </div>
+        
+        <div class="track-float" data-file="A%20Novel%20Divorce.wav" data-index="3" data-cover="https://studyhubmatt.neocities.org/mathewmoslow/ChatGPT%20Image%20May%2012,%202025%20at%2006_26_35%20AM.png">
+          <span class="track-number">4</span>
+          <span class="track-title">Deep Dive (Podcast)</span>
+        </div>
+      </div>
+    </div>
+    
+    <audio id="audio-player">
+      <source src="" type="audio/mpeg" id="audio-source">
+    </audio>
+  </div>
+
+  <!-- About Section - Moved to appear before Second Novel Section -->
+  <section class="about full-width">
+    <div class="about-container">
+      <div class="about-layout">
+        <div class="about-text">
+          <h2>About Mathew Moslow</h2>
+          <p>
+            Mathew Moslow is a writer, researcher, and nursing student who somehow managed to pen A Novel Divorce amidst the demands of university coursework, clinical rotations, and a relentless drive to uncover answers. With a sharp wit and fearless vulnerability, Moslow offers readers an unfiltered glimpse into his most transformative experiences.
+          </p>
+          <p>
+            Shaped by his formative years in Jamaica and guided by his role models along the way, Moslow brings a deep curiosity to his storytelling. Whether dissecting the generational patterns that shaped him or confronting the truths unearthed by his divorce, his writing merges raw emotion with piercing insight, creating a narrative that resonates deeply with readers.
+          </p>
+          <p>
+            When he's not writing, Moslow can often be found studying or researching, cooking, or finding cozy corners to recharge. A self-proclaimed dog person and a confessed homebody, he enjoys quiet moments and the occasional night out—if you invite him.
+          </p>
+          <p>
+            Moslow doesn't just share his story; he invites readers to see themselves within it. He believes self-discovery is one of life's most rewarding journeys and encourages readers to explore tools like the Enneagram to deepen their understanding. Writing A Novel Divorce was as much about processing his own life as it was about connecting with others—and it all began as a response to an event that no one even knew had occurred.
+          </p>
+          <p>
+            Unapologetically human, Moslow admits, "I'm selfish, judgmental, and it's hard to do better. But I try." This unflinching honesty, paired with his drive to make sense of life's challenges, makes A Novel Divorce both a deeply personal account and an invitation for readers to embark on their own paths to clarity and growth.
+          </p>
+        </div>
+        
+        <div class="about-image">
+          <img src="https://studyhubmatt.neocities.org/mathewmoslow/headshot-placeholder.jpg" alt="Mathew Moslow Headshot" class="headshot">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Second Novel Section - Changed title from "A Year and a Day" to "Title TBD" -->
+  <section class="second-novel full-width">
+    <div class="novel-container">
+      <div class="novel-layout">
+        <div class="novel-cover-side">
+          <img src="https://studyhubmatt.neocities.org/mathewmoslow/ayad.png" alt="A Year and a Day Cover" class="novel-cover">
+        </div>
+        
+        <div class="novel-text-side">
+          <h2>Title TBD</h2>
+          <h3 style="font-style: italic; color: var(--crimson);">Beyond the Reach of Justice</h3>
+          
+          <p>
+            "There are two places where justice cannot follow: beyond the grave and beyond the horizon. Jonathon Blake found a third: the space between law and morality."
+          </p>
+          
+          <p>
+            In the lush coastal beauty of Jamaica, where colonial history casts long shadows over modern lives, nurse Jonathan Blake harbors a wound that refuses to heal. When his mother dies of an overdose after a bitter divorce, Jonathan blames his father and sets into motion a plan that manipulates colonial-era legal loopholes to exact revenge—before the clock runs out.
+          </p>
+          
+          <a href="#" class="buy-button">Sign up to get notified</a>
+          <p style="margin-top: 15px; font-style: italic;">And for an exclusive sneak peek!</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="full-width">
+    <p>&copy; Mathew Moslow. All rights reserved.</p>
+  </footer>
+
+  <!-- JavaScript for Media Player and Hero Animation -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Hero Animation
+      if (window.gsap && window.ScrollTrigger) {
+        gsap.registerPlugin(ScrollTrigger);
+        
+        gsap.to("#hero-title", {
+          scale: 5,
+          opacity: 0,
+          scrollTrigger: {
+            trigger: ".hero",
+            start: "top top",
+            end: "bottom top",
+            scrub: 1.2
+          }
+        });
+        
+        // Control floating player visibility based on scroll position
+        const floatingPlayer = document.getElementById('floating-player');
+        
+        ScrollTrigger.create({
+          trigger: ".novel-hero",
+          start: "top center",
+          end: "bottom top",
+          onEnter: () => floatingPlayer.classList.add('visible'),
+          onLeave: () => floatingPlayer.classList.remove('visible'),
+          onEnterBack: () => floatingPlayer.classList.add('visible'),
+          onLeaveBack: () => floatingPlayer.classList.remove('visible')
+        });
+      }
+      
+      // Media Player Functionality
+      const audioPlayer = document.getElementById('audio-player');
+      const audioSource = document.getElementById('audio-source');
+      const playBtn = document.getElementById('play-btn');
+      const prevBtn = document.getElementById('prev-btn');
+      const nextBtn = document.getElementById('next-btn');
+      const progressTrack = document.getElementById('progress-track');
+      const timeDisplay = document.getElementById('time-display');
+      const nowPlaying = document.getElementById('now-playing');
+      const tracks = document.querySelectorAll('.track-float');
+      const miniCover = document.getElementById('mini-cover');
+      const minimizeBtn = document.getElementById('minimize-btn');
+      const playerBody = document.getElementById('player-body');
+      const floatingPlayer = document.getElementById('floating-player');
+      
+      let currentTrackIndex = 0;
+      let isPlaying = false;
+      
+      // Format time in MM:SS
+      function formatTime(seconds) {
+        if (!seconds || !isFinite(seconds)) return "00:00";
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
+      }
+      
+      // Load and play a track
+      function loadTrack(index) {
+        if (index < 0) index = tracks.length - 1;
+        if (index >= tracks.length) index = 0;
+        
+        currentTrackIndex = index;
+        
+        // Update active class for tracks
+        tracks.forEach(track => track.classList.remove('active'));
+        tracks[index].classList.add('active');
+        
+        // Get track info
+        const trackFile = tracks[index].getAttribute('data-file');
+        const trackTitle = tracks[index].querySelector('.track-title').textContent;
+        const trackCover = tracks[index].getAttribute('data-cover');
+        
+        // Update audio source
+        audioSource.src = `https://studyhubmatt.neocities.org/mathewmoslow/media/${trackFile}`;
+        audioPlayer.load();
+        
+        // Update display
+        nowPlaying.textContent = trackTitle;
+        miniCover.querySelector('img').src = trackCover;
+        
+        // Auto play if was playing
+        if (isPlaying) {
+          audioPlayer.play();
+          playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+        }
+      }
+      
+      // Minimize/maximize player
+      minimizeBtn.addEventListener('click', function() {
+        floatingPlayer.classList.toggle('minimized');
+        playerBody.classList.toggle('collapsed');
+        
+        if (playerBody.classList.contains('collapsed')) {
+          minimizeBtn.innerHTML = '<i class="fas fa-plus"></i>';
+        } else {
+          minimizeBtn.innerHTML = '<i class="fas fa-minus"></i>';
+        }
+      });
+      
+      // Play/Pause
+      playBtn.addEventListener('click', function() {
+        if (!audioSource.src && tracks.length > 0) {
+          loadTrack(0);
+        }
+        
+        if (audioPlayer.paused) {
+          audioPlayer.play();
+          playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+          isPlaying = true;
+        } else {
+          audioPlayer.pause();
+          playBtn.innerHTML = '<i class="fas fa-play"></i>';
+          isPlaying = false;
+        }
+      });
+      
+      // Previous track
+      prevBtn.addEventListener('click', function() {
+        loadTrack(currentTrackIndex - 1);
+        if (isPlaying) {
+          audioPlayer.play();
+          playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+        }
+      });
+      
+      // Next track
+      nextBtn.addEventListener('click', function() {
+        loadTrack(currentTrackIndex + 1);
+        if (isPlaying) {
+          audioPlayer.play();
+          playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+        }
+      });
+      
+      // Update progress
+      audioPlayer.addEventListener('timeupdate', function() {
+        const currentTime = audioPlayer.currentTime;
+        const duration = audioPlayer.duration;
+        const percent = (currentTime / duration) * 100 || 0;
+        
+        progressTrack.value = percent;
+        timeDisplay.textContent = `${formatTime(currentTime)} / ${formatTime(duration)}`;
+      });
+      
+      // Seek
+      progressTrack.addEventListener('input', function() {
+        const seekTime = (progressTrack.value / 100) * audioPlayer.duration;
+        audioPlayer.currentTime = seekTime;
+      });
+      
+      // Track ended
+      audioPlayer.addEventListener('ended', function() {
+        loadTrack(currentTrackIndex + 1);
+        audioPlayer.play();
+        playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+        isPlaying = true;
+      });
+      
+      // Click on track
+      tracks.forEach(track => {
+        track.addEventListener('click', function() {
+          const index = parseInt(this.getAttribute('data-index'));
+          loadTrack(index);
+          audioPlayer.play();
+          playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+          isPlaying = true;
+        });
+      });
+    });
+  </script>
+</body>
+</html>
